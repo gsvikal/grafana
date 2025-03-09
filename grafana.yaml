@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana-deployment
+  labels:
+    app: grafana
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      imagePullSecrets:
+      - name: grafana-registry-secret
+      containers:
+      - name: grafana
+        image: vikal190/grafana:main-ubuntu
+        ports:
+        - containerPort: 7091
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-service
+spec:
+  selector:
+    app: grafana
+  ports:
+    - protocol: TCP
+      port: 7091
+      targetPort: 7091
+  type: NodePort
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: grafana-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/tmp"
