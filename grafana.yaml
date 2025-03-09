@@ -15,7 +15,7 @@ spec:
         app: grafana
     spec:
       imagePullSecrets:
-      - name: grafana-registry-secret
+      - name: docker-registry-secret
       containers:
       - name: grafana
         image: vikal190/grafana:main-ubuntu
